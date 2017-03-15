@@ -10,7 +10,7 @@ class UsersController @Inject() extends Controller{
 
   def login = Action.async(parse.json){ implicit request =>
 
-    val userName = request.body \ "userName"
+    val email = request.body \ "email"
     val password = request.body \ "password"
 
     Future(Ok)
