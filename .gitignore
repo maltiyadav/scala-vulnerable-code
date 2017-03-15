@@ -1,0 +1,59 @@
+# Ignore Play! working directory #
+bin/
+/db
+.eclipse
+/lib/
+/logs/
+/modules
+/project/project
+/project/target
+/target
+/.idea
+tmp/
+test-result
+server.pid
+*.eml
+/dist/
+.cache
+/*.iml
+/out
+/out1
+/.idea_modules
+/.classpath
+/.project
+/RUNNING_PID
+/.settings
+.DS_Store
+*.log
+boxfuse.crt
+*.jks
+*.class
+*.yml
+
+# Winmerge files
+*.bak
+/sms
+
+# sbt specific
+.history
+.lib/
+dist/*
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+
+# Scala-IDE specific
+.scala_dependencies
+.worksheet
+
+# ENSIME specific
+.ensime_cache/
+.ensime
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
