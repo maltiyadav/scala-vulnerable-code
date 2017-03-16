@@ -14,17 +14,21 @@ class UsersDAO  @Inject() (protected val dbConfigProvider: DatabaseConfigProvide
   import driver.api._
 
   /**
+    * SQL INJECTION
     * On LN 26, email and password contains user-supplied data,
     * while the remainder is the SQL static part supplied by the programmer
     * making the SQL statement dynamic.
     *
     * Here,
-    *
-    *
-    * Example1: Supplied data for email and password could be anythings like "500 or 1=1"
+    * Example1:
+    * Supplied data for email and password could be anythings like "500 or 1=1"
     *
     * Sql query would be like that:
     * select name, email from users WHERE email='"500 or 1=1"' AND password='"500 or 1=1"'
+    *
+    * In above sql query, all the records of users table would be fetched becuase 1=1 would be always true.
+    *
+    *
     *
     * @param email
     * @param password
