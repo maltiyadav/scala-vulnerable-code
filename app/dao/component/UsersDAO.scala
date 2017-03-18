@@ -1,5 +1,6 @@
 package dao.component
 
+import java.security.MessageDigest
 import javax.inject.Inject
 
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
@@ -14,22 +15,6 @@ class UsersDAO  @Inject() (protected val dbConfigProvider: DatabaseConfigProvide
   import driver.api._
 
   /**
-    * SQL INJECTION
-    * On LN 26, email and password contains user-supplied data,
-    * while the remainder is the SQL static part supplied by the programmer
-    * making the SQL statement dynamic.
-    *
-    * Here,
-    * Example1:
-    * Supplied data for email and password could be anythings like "500 or 1=1"
-    *
-    * Sql query would be like that:
-    * select name, email from users WHERE email='"500 or 1=1"' AND password='"500 or 1=1"'
-    *
-    * In above sql query, all the records of users table would be fetched becuase 1=1 would be always true.
-    *
-    *
-    *
     * @param email
     * @param password
     * @return
@@ -37,12 +22,24 @@ class UsersDAO  @Inject() (protected val dbConfigProvider: DatabaseConfigProvide
 
   def login(email: String, password: String): Future[Vector[(String, String)]] = {
 
-    val query = sql"""
-             select name, email from users WHERE email='$email' AND password='$password'
+    //sanitize input data
+    val sanitizeEmail = sanitizeInput(email)
 
+    // encrypt password
+    val encryptPassword = md5Hash(password)
+
+    val query = sql"""
+             select name, email from users WHERE email=$sanitizeEmail AND password= $encryptPassword
     """.as[(String, String)]
     db.run(query)
   }
 
+  def md5Hash(text: String) : String = {
+    MessageDigest.getInstance("MD5").digest(text.getBytes()).map(0xFF & _).map { "%02x".format(_) }.foldLeft(""){_ + _}
+  }
+
+  def sanitizeInput(input: String) = {
+    input.replace("\"", "").replace("\'", "").replace("\\", "").trim
+  }
 }
 
